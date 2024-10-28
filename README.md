@@ -47,7 +47,7 @@ int MAC input files: "A_binary2.txt", "B_binary2.txt", "C_binary2.txt")
 The reference model consists of two separate function, int MAC and floating point MAC. In each fuction, the model converts the bits into decimal value and then calculates the MAC output. The output decimal value is then converted back into bits. The floating point MAC model uses built-in functions to convert the bits into bfloat16 value.
 
 ### TEST FILE
-    # 0. INFINITY CASE  
+    # s0. INFINITY CASE  
     # FOR C = INFINITY
     cornerA.append(int(0b0100000000000000)); # A = 2
     cornerB.append(int(0b0100000000000000)); # B = 2
