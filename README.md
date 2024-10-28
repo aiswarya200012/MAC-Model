@@ -63,9 +63,9 @@ STEP 1: Mantissa Multiplication and Exponent Addition -> In this step, we multip
 STEP 2: Mantissa Normalization -> In this step, we normalize the mantissa such that the product is always less than 2 and update the exponent accordingly.<br>
 STEP 3: Mantissa rounding according to Round to nearest -> We use the round to nearest method to round the mantissa to 7 bits, as per the bfloat standard. The rounding off scheme works as follows:<br>
 1. Find the Gaurd bits (G:8th bit), Round bit (R: 9th bit) and Sticky(S: OR of remaining bits) bit.
-2. Now, if GRS = 100 : If 7th bit is 1, increment it, else round down
-3.         GRS = 0xx : Round down
-           GRS = 101,110,111: Increment the number by 1.
+2. Now, if GRS = 100 : If 7th bit is 1, increment it, else round down <br>
+3. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GRS = 0xx : Round down <br>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GRS = 101,110,111: Increment the number by 1. <br>
 Therefore, we end up with the product in bfloat16 format.
 
 Now, Floating point addition involves the following steps<br>
@@ -110,7 +110,7 @@ In order to perform the verification appropriately, we have split the values giv
 Having obtained these testcases for each input, we feed them to the bins to define the coverage. In order to get a full cross coverage, we run for loops to obtain all permutations for (A,B,C,S,enA,enB,enC,enS). This is then written to a file which provides the input to the DUT and the model.
 *For faster performance, we have as of now set enB, enC as 1. However, these can also be varied as 0 or 1, if needed. Only it takes the system a lot of time to process.
 ### Corner Case Validation
-This model covers various corner cases, all of which are listed below:
+This model covers various corner cases, some of the cases are listed below:
 
 CASE 1. When inputs are infinity
 * A or B = +infinity
