@@ -74,9 +74,25 @@ STEP 2: Mantissa Addition/Subtraction -> In this step, add or subtract the two m
 STEP 3: Mantissa Normalization -> In this step, we normalize the mantissa to a value less than 2.<br>
 STEP 4: Mantissa rounding according to Round to nearest -> In this step, we round off the mantissa to a 23 bit value as per the round to nearest methodology explained above. <br>
 
+******************************** Special Cases*****************************<br>
+We have tried to handle the cases when the number is infinity or zero. 
+1. Whenever, the exponent overflows, the number is set to infinity.
+2. If, the exponent underflows, the number is set to 0.
+3. If, any of the inputs(A,B,C) is infinity, the result is set to infinity.
+4. If, either A or B is zero, we make the product zero.
+5. If C is 0, the mantissa for C is passed as 0.0000 instead of 1.000000 for addition step.
 
+The design is however not equipped to handle NAN and denormal numbers.
+
+#### Pipelined design
+The design has been pipelined as shown in the following figure. The intermediate results are stored in registers to allow for the total propogation delay to be split.
+![fig3](https://github.com/user-attachments/assets/93eaff7d-a515-4aaa-b1fc-96e6fa0d6236)
+
+In order, to be able to perform addition with the variable C in a pipelined design, we have stored it into registers for 2 clock cycles.
+As of now, we have introduced only two stages of pipeline and not pipelined the nultiplication logic as well. This is done to ensure that in the top module, both int8 MAC module and fp32 MAC module give the output after the same number of clock cycles. 
 
 ## Testing and Validation
+
 The folder consists of:
 * BlueSpecs files (top_module.bsv, multiplier.bsv and multiplier_exp.bsv)
 * Test input files (for corner cases and random test generation : "A.txt", "B.txt", "C.txt", <br>
@@ -87,6 +103,14 @@ int MAC input files: "A_binary2.txt", "B_binary2.txt", "C_binary2.txt")
 
 ### Python Reference Model
 The reference model consists of two separate function, int MAC and floating point MAC. In each fuction, the model converts the bits into decimal value and then calculates the MAC output. The output decimal value is then converted back into bits. The floating point MAC model uses built-in functions to convert the bits into bfloat16 value.
+
+In order to perform the verification appropriately, we have split the values given to each input into two separate lists.
+1. Directed cases: These consist of infinity,-infinity,0,highest positive number, lowest negative number,-ve value,+value
+2. Random cases: These consist of randomly generated values for A,B and C.
+
+Having obtained these testcases for each input, we feed them to the bins to define the coverage. In order to get a full cross coverage, we run for loops to obtain all permutations for (A,B,C,S,enA,enB,enC,enS). This is then written to a file which provides the input to the DUT and the model.
+*For faster performance, we have as of now set enB, enC as 1. However, these can also be varied as 0 or 1, if needed. Only it takes the system a lot of time to process.
+
 
 ### TEST FILE
     # s0. INFINITY CASE  
