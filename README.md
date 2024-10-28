@@ -54,7 +54,16 @@ As seen, Stage 2 involves three 16 bit additions while Stage 3 involves sequenti
 
 ### fp32 MAC Module
 *************************fp32 MAC module -> mkMult_exp ******************************** <br>
-Fp 32 multiplier.
+The fp32 MAC module consists of the following methods:
+1. get_input- Fetches the inputs A,B and C. It will split the inputs into the mantissa, exponent and sign bits.
+2. send_output- Registers the output generated MAC and sends it out in IEEE Single precision format.
+
+Floating point multiplication involves the following steps
+****************************STEP 1: Mantissa Multiplication and Exponent Addition *****************
+In this step, we multiply the mantissa of the two input operands A and B
+****************************STEP 2: Mantissa Normalization *****************
+In this step, we normalize the mantissa such that the product is always less than 2 and 
+
 ## Testing and Validation
 The folder consists of:
 * BlueSpecs files (top_module.bsv, multiplier.bsv and multiplier_exp.bsv)
