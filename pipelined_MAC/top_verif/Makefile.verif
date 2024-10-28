@@ -1,0 +1,15 @@
+SIM ?= verilator
+TOPLEVEL_LANG ?= verilog
+
+PWD=$(shell pwd)
+
+export PYTHONPATH:=$(PWD)/top_verif:$(PYTHONPATH)
+
+VERILOG_SOURCES=$(PWD)/verilog/topModule.v
+
+EXTRA_ARGS = --trace --trace-structs
+
+TOPLEVEL = topModule
+MODULE   := top
+
+include $(shell cocotb-config --makefiles)/Makefile.sim
