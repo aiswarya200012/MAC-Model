@@ -1,38 +1,59 @@
 # MAC-Model
-## theory
+The following design consists of a top module which performs MAC(Multiply-Accumulate) generation for inputs of the following data types:
+1. S1: (A:int8,B:int8,C:int32) -> (MAC:int32)
+2. S2: (A:bf16,B:bf16,C:fp32) -> (MAC:fp32)
+
+In order to do so, we have split the whole design into three major modules.
+1. int8 MAC module -> This module generates the MAC of type S1
+2. fp32 MAC module -> This module generates the MAC of type S2
+3. Top module -> This module instantiates the above two modules and feeds the inputs to them on the basis of the value of a select input S.
+
+### Top Module
+*************************TOP MODULE -> topModule ********************************<br>
 The top module consists of the following methods:
-1. Method get A- Used to register the input A
-2. Method get B -
-3. Method get C
-4. Method get S
-5. Method action value give out MAC - It is used to register the output, based on the value of S
+1. getA- Used to register the 16 bit input A
+2. getB- Used to register the 16 bit input B
+3. getC- Used to register the 32 bit input C
+4. getS- Used to register the 1 input S (Select signal)
+5. sendout_mac - It is used to register the output, based on the value of S
 
-The rule xyz, incorporates the functionality of the MUX's at the input. Based on the value of S, we feed the inputs to the appropriate MAC module. If S =1, MAC computation occurs for  type S1(int8), if S=0, MAC computation occurs for type S2(fp32).
+The rule rl_mux_input, incorporates the functionality of the MUX's at the input. Based on the value of S, we feed the inputs to the appropriate MAC module. If S =1, MAC computation occurs for type S1(int8), if S=0, MAC computation occurs for type S2(fp32).
 
-** If S=1, the LSB 8 bits are fed to the inputs A and B of the int8 MAC module.
+** If S=1, the LSB 8 bits are fed to the inputs A and B of the int8 MAC module. **
 
-int8 MAC module
-The int8 MAC module consists of the following methods.
-getinputs: fetches the inputs a,b and c
-Sendmac out: registers the output generated mac
-The signed multiplication of two numbers A and B expressed in 2's complement form can be performed as follows:
+### int8 MAC Module
+*************************int8 MAC module -> mkMult ******************************** <br>
+The int8 MAC module consists of the following methods:
+1. get_inp- Fetches the inputs A,B and C.
+2. send_out- Registers the output generated MAC
 
-Equation (1) in operands form is illustrated as shown in the following figure.
-As seen in way 1, we have a series of fixed 1 additions which need to be perfomed. Hence, simplifying the design further, we end up with way 2.
+Now,
+The signed multiplication of two numbers A and B expressed in 2's complement form can be performed as shown in the following figure:
+
+![lagrida_latex_editor](https://github.com/user-attachments/assets/f32628c0-1452-4088-9b49-a54ef78b8bff)
+
+The above Equation, in operands form is illustrated as shown in the following figure.
+![fig1](https://github.com/user-attachments/assets/54258d46-010b-4251-b276-877d50f97000)
+
+As seen in case 1, we have a series of fixed 1 additions which need to be perfomed. Hence, simplifying the design further, we end up with case 2.Thus, instead of sign Extending the partial products, we can simply add (256) and (32768) after generating the partial products as specified in case 2. 
 
 In the provided code, we perform the multiplication as follows.
-1. Step 1. We generate all the 8 partial products while taking care of negating the AND terms where one of the bits is the mSB of one of the inputs, while the other bit is not.  Eg.(A7B0)
+1. Step 1. We generate all the 8 partial products while taking care of negating the AND terms where one of the bits is the MSB of one of the inputs, while the other bit is not.  Eg.(A7B0)
 2. Step 2. We perform partial products addition.
-3. Step 3. We add up the values () and () which correspond to the 1's shown in the above figure.
+3. Step 3. We add up the values (256) and (32768) which correspond to the 1's shown in the above figure.
 4. Step 4. We append zeroes to the product and add C.
 
 In the pipelined design, we have tried to split the whole code into chunks of equal delay as much as possible. The design flow is as shown in the following figure.
+![fig2](https://github.com/user-attachments/assets/9a6b5a52-3269-4c80-97e0-ec8c320a669a)
+
 Stage 1: We compute all the 8 partial products.i.e P[n] where n=0,1,..7
 Stage 2: We parallely compute the sum 4 partial products parallely. Let this be S[0] = summation(P[n]) for n =0,1,2,3 and S[1] = summation(P[n]) for n =4,5,6,7.
 Stage 3: We compute the sum of S[0] ,S[1] , x,y and C. Thereby giving us the final MAC.
 
 As seen, Stage 2 involves three 16 bit additions while Stage 3 involves sequential two 16 bit additions and one 32 bit addition. Thereby balancing the delay of the two blocks to a specific extent.
 
+### fp32 MAC Module
+*************************fp32 MAC module -> mkMult_exp ******************************** <br>
 Fp 32 multiplier.
 ## Testing and Validation
 The folder consists of:
