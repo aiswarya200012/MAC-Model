@@ -114,69 +114,86 @@ This model covers various corner cases, all of which are listed below:
 
 CASE 1. When inputs are infinity
 * A or B = +infinity
-input_A -> 0b0111111110000000	Here, input_A is +infinity
-input_B -> 0b0001100111001010
-input_C -> 0b00011001110010100000000000000001
+```
+input_A -> 0b0111111110000000	Here, input_A is +infinity 
+input_B -> 0b0001100111001010 
+input_C -> 0b00011001110010100000000000000001 
 OUTPUT  -> 0b01111111100000000000000000000000 ,i.e, +infinity
+```
 
 * C = +infinity
+```
 input_A -> 0b0111111101111111	
 input_B -> 0b0001100111001010
 input_C -> 0b01111111100000000000000000000000 Here, input_C is +infinity
 OUTPUT  -> 0b01111111100000000000000000000000 ,i.e, +infinity
-
+```
 The model also takes care of the -infinity inputs. For these cases, the output will be -infinity.
 CASE 2. When inputs are zero
 * A or B = zero
+```
 input_A -> 0b0000000000000000	Here, A is zero
 input_B -> 0b0001100111001010
 input_C -> 0b00011001110010100000000000000001
 OUTPUT  -> 0b00011001110010100000000000000001 ,i.e, input_C
-
+```
 * C = zero
+```
 input_A -> 0b0001100111001010	
 input_B -> 0b0001100111001010
 input_C -> 0b00000000000000000000000000000000 Here, input_C is +infinity
 OUTPUT  -> 0b11001101100000000000000000000000 ,i.e, input_A * input_B 
-
+```
 * A, B and C = zero
+```
 input_A -> 0b0000000000000000	
 input_B -> 0b0000000000000000
 input_C -> 0b00000000000000000000000000000000 
 OUTPUT  -> 0b00000000000000000000000000000000
-
+```
 SIGN HANDLING
 
 * Positive * Positive + Positive
+```
 input_A -> 0b0001100111001010	
 input_B -> 0b0001100111001010
 input_C -> 0b00011001110010100000000000000001 
+```
 
 * Positive * Negative + Positive
+```
 input_A -> 0b0001100111001010	
 input_B -> 0b1100001110000001
 input_C -> 0b00011001110010100000000000000001 
+```
 
 * Positive * Positive + Negative
+```
 input_A -> 0b0001100111001010	
 input_B -> 0b0001100111001010
 input_C -> 0b11000011100000011111100001111101 
+```
 
 * Negative * Negative + Negative
+```
 input_A -> 0b1100001110000001	
 input_B -> 0b1100001110000001
 input_C -> 0b11000011100000011111100001111101 
+```
 
 * Positive * Negative + Negative
+```
 input_A -> 0b0001100111001010	
 input_B -> 0b1100001110000001
 input_C -> 0b11000011100000011111100001111101 
+```
 
 * Negative * Negative + Positive
+```
 input_A -> 0b0001100111001010	
 input_B -> 0b1100001110000001
 input_C -> 0b11000011100000011111100001111101 
-
+```
 ### How To Run
 #### Pre-Requisites
 * The system should have BlueSpec Compiler and python environment with the following libraries:
