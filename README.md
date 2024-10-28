@@ -1,4 +1,8 @@
 # MAC-Model
+
+NAME : Priyanka Dangwal EE23M096,  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Aiswarya C.S, EE23M064
+       
 The following design consists of a top module which performs MAC(Multiply-Accumulate) generation for inputs of the following data types:
 1. S1: (A:int8,B:int8,C:int32) -> (MAC:int32)
 2. S2: (A:bf16,B:bf16,C:fp32) -> (MAC:fp32)
