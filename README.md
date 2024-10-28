@@ -58,11 +58,23 @@ The fp32 MAC module consists of the following methods:
 1. get_input- Fetches the inputs A,B and C. It will split the inputs into the mantissa, exponent and sign bits.
 2. send_output- Registers the output generated MAC and sends it out in IEEE Single precision format.
 
-Floating point multiplication involves the following steps
-****************************STEP 1: Mantissa Multiplication and Exponent Addition *****************
-In this step, we multiply the mantissa of the two input operands A and B
-****************************STEP 2: Mantissa Normalization *****************
-In this step, we normalize the mantissa such that the product is always less than 2 and 
+Floating point multiplication involves the following steps<br>
+STEP 1: Mantissa Multiplication and Exponent Addition -> In this step, we multiply the mantissa of the two input operands A and B<br>
+STEP 2: Mantissa Normalization -> In this step, we normalize the mantissa such that the product is always less than 2 and update the exponent accordingly.<br>
+STEP 3: Mantissa rounding according to Round to nearest -> We use the round to nearest method to round the mantissa to 7 bits, as per the bfloat standard. The rounding off scheme works as follows:<br>
+1. Find the Gaurd bits (G:8th bit), Round bit (R: 9th bit) and Sticky(S: OR of remaining bits) bit.
+2. Now, if GRS = 100 : If 7th bit is 1, increment it, else round down
+3.         GRS = 0xx : Round down
+           GRS = 101,110,111: Increment the number by 1.
+Therefore, we end up with the product in bfloat16 format.
+
+Now, Floating point addition involves the following steps<br>
+STEP 1: Exponent Equalization -> In this step, we make the exponent of the smaller number equal to the bigger number exponent and shift its mantissa to the right accordingly.<br>
+STEP 2: Mantissa Addition/Subtraction -> In this step, add or subtract the two mantissa's on the basis of their sign bit.<br>
+STEP 3: Mantissa Normalization -> In this step, we normalize the mantissa to a value less than 2.<br>
+STEP 4: Mantissa rounding according to Round to nearest -> In this step, we round off the mantissa to a 23 bit value as per the round to nearest methodology explained above. <br>
+
+
 
 ## Testing and Validation
 The folder consists of:
