@@ -92,7 +92,6 @@ In order, to be able to perform addition with the variable C in a pipelined desi
 As of now, we have introduced only two stages of pipeline and not pipelined the nultiplication logic as well. This is done to ensure that in the top module, both int8 MAC module and fp32 MAC module give the output after the same number of clock cycles. 
 
 ## Testing and Validation
-
 The folder consists of:
 * BlueSpecs files (top_module.bsv, multiplier.bsv and multiplier_exp.bsv)
 * Test input files (for corner cases and random test generation : "A.txt", "B.txt", "C.txt", <br>
@@ -110,79 +109,74 @@ In order to perform the verification appropriately, we have split the values giv
 
 Having obtained these testcases for each input, we feed them to the bins to define the coverage. In order to get a full cross coverage, we run for loops to obtain all permutations for (A,B,C,S,enA,enB,enC,enS). This is then written to a file which provides the input to the DUT and the model.
 *For faster performance, we have as of now set enB, enC as 1. However, these can also be varied as 0 or 1, if needed. Only it takes the system a lot of time to process.
+### Corner Case Validation
+This model covers various corner cases, all of which are listed below:
 
+CASE 1. When inputs are infinity
+* A or B = +infinity
+input_A -> 0b0111111110000000	Here, input_A is +infinity
+input_B -> 0b0001100111001010
+input_C -> 0b00011001110010100000000000000001
+OUTPUT  -> 0b01111111100000000000000000000000 ,i.e, +infinity
 
-### TEST FILE
-    # s0. INFINITY CASE  
-    # FOR C = INFINITY
-    cornerA.append(int(0b0100000000000000)); # A = 2
-    cornerB.append(int(0b0100000000000000)); # B = 2
-    #cornerC.append(int(0b01000000000000000000000000000000))
-    cornerC.append(int(0b01111111100000000000000000000000)) # C = INFINITY
-    cornerS.append(int(0))
-    
-    # FOR A = INFINITY
-    cornerA.append(int(0b0111111110000000)); # A = INFINITY
-    cornerB.append(int(0b0100110000001111)); # B = 
-    cornerC.append(int(0b01000001110010101100001010010000)) # C = 25.345001220703125
-    cornerS.append(int(0))
-    
-    
-    # 1. OVERFLOW CASE
-    cornerA.append(int(0b0111100001111000)); # maximum bfloat16 value, just under infinity
-    cornerB.append(int(0b0111100001111000)); # maximum bfloat16 value, just under infinity
-    cornerC.append(int(0b01000001110010101100001010010000)) # C = 25.345001220703125
-    cornerS.append(int(0))
-    
-    # 2. UNDERFLOW CASE
-    cornerA.append(int(0b0001100111001010)); # A = 2.08863×10−23
-    cornerB.append(int(0b0000010111001010)); # B = 2
-    cornerC.append(int(0b01000001110010101100001010010000)) # C = 25.345001220703125
-    cornerS.append(int(0))
-    
-    # 5. SIGN HANDLING CASE
-    # positive * positive + positive
-    cornerA.append(int(0b0100000111001010)); # A = 25.25
-    cornerB.append(int(0b0100000000000000)); # B = 2
-    cornerC.append(int(0b01000001110010101100001010010000)) # C = 25.345001220703125
-    cornerS.append(int(0))
-    
-    # negative * negative + negative
-    cornerA.append(int(0b1100000000010011)); # A = -2
-    cornerB.append(int(0b1100000001100000)); # B = 2
-    cornerC.append(int(0b11000001110010101100001010010000)) # C = -25.345001220703125
-    cornerS.append(int(0))
-    
-    # positive * negative + positive
-    cornerA.append(int(0b0100000011000000)); # A = 25.25
-    cornerB.append(int(0b1100100000100000)); # B = -2
-    cornerC.append(int(0b01000001110010101100001010010000)) # C = 25.345001220703125
-    cornerS.append(int(0))
-    
-    # positive * positive + negative
-    cornerA.append(int(0b0100000000111100)); # A = 25.25
-    cornerB.append(int(0b0100001000000000)); # B = 2
-    cornerC.append(int(0b11000001110010101100001010010000)) # C = -25.345001220703125
-    cornerS.append(int(0))
-    
-    # 4. ZERO HANDLING CASE
-    # 	WHEN A/B = 0
-    cornerA.append(int(0b0000000000000000)); # A = 0
-    cornerB.append(int(0b0000110111001010)); # B = 2
-    cornerC.append(int(0b01000001110010101100001010010000)) # C = 25.345001220703125
-    cornerS.append(int(0))
-    
-    # 	WHEN C = 0
-    cornerA.append(int(0b0101100111001010)); # A = 25.25
-    cornerB.append(int(0b0010010111001010)); # B = 2
-    cornerC.append(int(0b00000000000000000000000000000000)) # C = 0
-    cornerS.append(int(0))
-    
-    # 	WHEN A, B, C = 0
-    cornerA.append(int(0b0000000000000000)); # A = 25.25
-    cornerB.append(int(0b0000000000000000)); # B = 2
-    cornerC.append(int(0b00000000000000000000000000000000)) # C = 0
-    cornerS.append(int(0))
+* C = +infinity
+input_A -> 0b0111111101111111	
+input_B -> 0b0001100111001010
+input_C -> 0b01111111100000000000000000000000 Here, input_C is +infinity
+OUTPUT  -> 0b01111111100000000000000000000000 ,i.e, +infinity
+
+The model also takes care of the -infinity inputs. For these cases, the output will be -infinity.
+CASE 2. When inputs are zero
+* A or B = zero
+input_A -> 0b0000000000000000	Here, A is zero
+input_B -> 0b0001100111001010
+input_C -> 0b00011001110010100000000000000001
+OUTPUT  -> 0b00011001110010100000000000000001 ,i.e, input_C
+
+* C = zero
+input_A -> 0b0001100111001010	
+input_B -> 0b0001100111001010
+input_C -> 0b00000000000000000000000000000000 Here, input_C is +infinity
+OUTPUT  -> 0b11001101100000000000000000000000 ,i.e, input_A * input_B 
+
+* A, B and C = zero
+input_A -> 0b0000000000000000	
+input_B -> 0b0000000000000000
+input_C -> 0b00000000000000000000000000000000 
+OUTPUT  -> 0b00000000000000000000000000000000
+
+SIGN HANDLING
+
+* Positive * Positive + Positive
+input_A -> 0b0001100111001010	
+input_B -> 0b0001100111001010
+input_C -> 0b00011001110010100000000000000001 
+
+* Positive * Negative + Positive
+input_A -> 0b0001100111001010	
+input_B -> 0b1100001110000001
+input_C -> 0b00011001110010100000000000000001 
+
+* Positive * Positive + Negative
+input_A -> 0b0001100111001010	
+input_B -> 0b0001100111001010
+input_C -> 0b11000011100000011111100001111101 
+
+* Negative * Negative + Negative
+input_A -> 0b1100001110000001	
+input_B -> 0b1100001110000001
+input_C -> 0b11000011100000011111100001111101 
+
+* Positive * Negative + Negative
+input_A -> 0b0001100111001010	
+input_B -> 0b1100001110000001
+input_C -> 0b11000011100000011111100001111101 
+
+* Negative * Negative + Positive
+input_A -> 0b0001100111001010	
+input_B -> 0b1100001110000001
+input_C -> 0b11000011100000011111100001111101 
+
 ### How To Run
 #### Pre-Requisites
 * The system should have BlueSpec Compiler and python environment with the following libraries:
