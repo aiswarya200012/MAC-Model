@@ -2,18 +2,17 @@
 ## Testing and Validation
 The folder consists of:
 * BlueSpecs files (top.bsv, systolic_unit.bsv, top_module.bsv, multiplier.bsv and multiplier_exp.bsv)
-* Test input files (for corner cases and random test generation : "A.txt", "B.txt", "S.txt" <br>
+* Test input files (for corner cases and random test generation : "A.txt" and "B.txt" <br>
 * test file (top.py) and python reference model for the design (mac_model.py)
 
 ### Python Reference Model
-The reference model consists of two separate function, int MAC and floating point MAC. In each fuction, the model converts the bits into decimal value and then calculates the MAC output. The output decimal value is then converted back into bits. The floating point MAC model uses built-in functions to convert the bits into bfloat16 value.
+The python reference model consists of one main function which takes the elements of matrix A and B as inputs and returns the resultant matrix after multiplication. It uses the basic three-loop matrix multiplication logic but, for computation, we uses two separate functions: int MAC and floating point MAC. Both the models convert the bits into decimal value and then calculates the MAC output. The output decimal value is then converted back into bits. The floating point MAC model uses built-in functions to convert the bits into bfloat16 value. The result from these models are used to calculate output for each element in the resultant matrix.
 
 In order to perform the verification appropriately, we have split the values given to each input into two separate lists.
 1. Directed cases: These consist of infinity,-infinity,0,highest positive number, lowest negative number,-ve value,+value
-2. Random cases: These consist of randomly generated values for A,B and C.
+2. Random cases: These consist of randomly generated values for A and B.
 
-Having obtained these testcases for each input, we feed them to the bins to define the coverage. In order to get a full cross coverage, we run for loops to obtain all permutations for (A,B,C,S,enA,enB,enC,enS). This is then written to a file which provides the input to the DUT and the model.
-*For faster performance, we have as of now set enB, enC as 1. However, these can also be varied as 0 or 1, if needed. Only it takes the system a lot of time to process.
+Having obtained these testcases for each input, we feed them to the bins to define the coverage. This is written to separate files which provides the input to the DUT and the model.
 ### Corner Case Validation
 This model covers various corner cases, some of the cases are listed below:
 
