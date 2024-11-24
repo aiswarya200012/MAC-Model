@@ -1,9 +1,12 @@
-# Assignment 1
-# MAC-Model
+# PROJECT
 
 NAME : Priyanka Dangwal EE23M096,  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Aiswarya C.S, EE23M064
-       
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Aiswarya C.S, EE23M064 <br>
+<br>
+This report consists of design details for both *Project 1* and *Project 2*.
+# PROJECT 1   
+## MAC-Model
+  
 The following design consists of a top module which performs MAC(Multiply-Accumulate) generation for inputs of the following data types:
 1. S1: (A:int8,B:int8,C:int32) -> (MAC:int32)
 2. S2: (A:bf16,B:bf16,C:fp32) -> (MAC:fp32)
@@ -96,8 +99,8 @@ The design has been pipelined as shown in the following figure. The intermediate
 In order, to be able to perform addition with the variable C in a pipelined design, we have stored it into registers for 2 clock cycles.
 As of now, we have introduced only two stages of pipeline and not pipelined the nultiplication logic as well. This is done to ensure that in the top module, both int8 MAC module and fp32 MAC module give the output after the same number of clock cycles. 
 
-# Assignment 2
-# 4x4 Sysolic Array 
+# PROJECT 1 
+## 4x4 Sysolic Array 
 The given assignment consists of the construction of a 4x4 systolic array which allows for the multiplication of two 4x4 matrices. The matrices A and B can contain numbers in the following two formats:
 1. S1: (A:int8,B:int8,C:int32) -> (MAC:int32)
 2. S2: (A:bf16,B:bf16,C:fp32) -> (MAC:fp32)
