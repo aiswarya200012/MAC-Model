@@ -118,3 +118,20 @@ input_C -> 0b11000011100000011111100001111101
   pip install cocotb==1.6.2
   pip install cocotb_coverage==1.1
   ```
+
+  #### Steps to run the code
+1. In the terminal, enter the current directory and activate the python environment using the following code:
+   ```
+   pyenv activate py38
+   ```
+2. Enter the following commands for verilog generations and simulation of the test file
+    ```
+    make generate_verilog
+    make simulate
+    ```
+  The command **make simulate** will test the cases in the **top.py** file and generates a **coverage_mac.yml** file. This file will store the coverage results for each input of the model.
+  
+3. To clean the generated files
+   ```
+   make clean_build
+   ```
