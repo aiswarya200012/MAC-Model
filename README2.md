@@ -6,7 +6,7 @@ The folder consists of:
 * test file (top.py) and python reference model for the design (mac_model.py)
 
 ### Python Reference Model
-The python reference model consists of one main function which takes the elements of matrix A and B as inputs and returns the resultant matrix after multiplication. It uses the basic three-loop matrix multiplication logic but, for computation, we uses two separate functions: int MAC and floating point MAC. Both the models convert the bits into decimal value and then calculates the MAC output. The output decimal value is then converted back into bits. The floating point MAC model uses built-in functions to convert the bits into bfloat16 value. The result from these models are used to calculate output for each element in the resultant matrix.
+The python reference model consists of one main function which takes the elements of matrix A and B as inputs and returns the resultant matrix after multiplication. It uses the basic three-loop matrix multiplication logic but, for computation, it uses two separate functions: int MAC and floating point MAC. Both the models convert the bits into decimal value and then calculates the MAC output. The output decimal value is then converted back into bits. The floating point MAC model uses built-in functions to convert the bits into bfloat16 value. The result from these models are used to calculate output for each element in the resultant matrix.
 
 In order to perform the verification appropriately, we have split the values given to each input into two separate lists.
 1. Directed cases: These consist of infinity,-infinity,0,highest positive number, lowest negative number,-ve value,+value
