@@ -97,8 +97,8 @@ In order, to be able to perform addition with the variable C in a pipelined desi
 As of now, we have introduced only two stages of pipeline and not pipelined the nultiplication logic as well. This is done to ensure that in the top module, both int8 MAC module and fp32 MAC module give the output after the same number of clock cycles. 
 
 # Assignment 2
-# 4*4 Sysolic Array 
-The given assignment consists of the construction of a 4*4 systolic array which allows for the multiplication of two 4*4 matrices. The matrices A and B can contain numbers in the following two formats:
+# 4x4 Sysolic Array 
+The given assignment consists of the construction of a 4x4 systolic array which allows for the multiplication of two 4x4 matrices. The matrices A and B can contain numbers in the following two formats:
 1. S1: (A:int8,B:int8,C:int32) -> (MAC:int32)
 2. S2: (A:bf16,B:bf16,C:fp32) -> (MAC:fp32)
 In order to build up a 4*4 sysolic array using the MAC module designed previously, we follow the given steps:
@@ -121,7 +121,7 @@ MAC computation takes 3 clock cycles in an unpipelined module and hence, both A 
 ### Top Module
 *************************Top Module -> mkSystolic ********************************<br>
 Step 2: Connecting the sysolic units in a grid fashion
-In this step, the systolic units are connected in a 4*4 grid fashion. This is achieved using the module , which consists of the following methods:
+In this step, the systolic units are connected in a 4x4 grid fashion. This is achieved using the module , which consists of the following methods:
 1. getA - Used to register four input values of A being passed horizontally to the leftmost systolic units.
 2. getB - Used to register four input values of B being passed vertically to the topmost systolic units.
 3. getS - Used to register four input values of S being passed vertically to the topmost systolic units.
@@ -135,7 +135,7 @@ Here,the value of B,S and mac is passed vertically downwards while the value of 
 The signal getStage is used to distinguish between the stages when B is being provided as input to be stored in the grid and when computation occurs. It helps in the storing of B in the systolic array unit. A counter could have also been used to achieve the desired functionality but it suffers from the drawback of limitation of output correctness based on input timing, thereby reducing the design flexibility..
 
 ## Operation and Testing Stages
-***********************************Operation***************************************<br>
+***********************************Operation ***************************************<br>
 The computation occurs in the following stages:
 1. Firstly, we feed in the value of S and the rows of the matrix B from downwards i.e 4 to 1 via the top level systolic array units.
 2. During, this stage, getStage signal was set to 1, which is now further set to 0.
