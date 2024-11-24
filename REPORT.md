@@ -96,11 +96,11 @@ The design has been pipelined as shown in the following figure. The intermediate
 In order, to be able to perform addition with the variable C in a pipelined design, we have stored it into registers for 2 clock cycles.
 As of now, we have introduced only two stages of pipeline and not pipelined the nultiplication logic as well. This is done to ensure that in the top module, both int8 MAC module and fp32 MAC module give the output after the same number of clock cycles. 
 
-#Assignment 2
-#4*4 Sysolic Array 
+# Assignment 2
+# 4*4 Sysolic Array 
 The given assignment consists of the construction of a 4*4 systolic array which allows for the multiplication of two 4*4 matrices. The matrices A and B can contain numbers in the following two formats:
-1. 
-2. 
+1. S1: (A:int8,B:int8,C:int32) -> (MAC:int32)
+2. S2: (A:bf16,B:bf16,C:fp32) -> (MAC:fp32)
 In order to build up a 4*4 sysolic array using the MAC module designed previously, we follow the given steps:
 ### Systolic Unit Module
 *************************Systolic Unit Module -> systolicUnit ********************************<br>
